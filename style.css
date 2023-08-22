@@ -6,7 +6,23 @@
 }
 
 .board-container{
-    display:inline-grid;
-    grid-template-columns: auto auto auto;
-    gap: 25px;
+    height: 200px;
+    width: 200px;
+    display:grid;
+    grid-auto-columns:1fr;
+    grid-auto-rows:1fr;   
+    overflow: hidden;
+}
+
+
+.board-square{
+    outline:2px solid #000;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board-square:last-child{
+    grid-area:3/3
 }
