@@ -1,0 +1,12 @@
+.board{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.board-container{
+    display:inline-grid;
+    grid-template-columns: auto auto auto;
+    gap: 25px;
+}
