@@ -1,17 +1,13 @@
 const BoardContainer = document.querySelector(".board-container")
-
-
-
-
 const GameBoard = (() => {
-    const board = new Array(9)
+    const board = []
 
     return { board }
 })();
 
-const Player = (name, charater) => {
+const Player = (name, character) => {
 
-    return { name, charater }
+    return { name, character }
 }
 
 const GameContoller = (() => {
@@ -24,7 +20,9 @@ const GameContoller = (() => {
         const playerTwo = Player("Two", 'O')
         const player = playerOne
         console.log(`GameBoard ${gameBoard}`)
+
         while (!checkForWin(gameBoard)) {
+            console.log("Board: " + checkForWin(gameBoard))
             makeMove(player, gameBoard);
 
         }
@@ -32,64 +30,88 @@ const GameContoller = (() => {
     return { startGame }
 })();
 
+const gameBoard = GameBoard.board
+const playerOne = Player("One", 'X');
+const playerTwo = Player("Two", 'O')
+let player = playerOne
+populateBoard(gameBoard);
 
-function startGame() {
+// function startGame() {
 
-    const gameBoard = GameBoard.board;
-    populateBoard(gameBoard);
-    const playerOne = Player("One", 'X');
-    const playerTwo = Player("Two", 'O')
-    const player = playerOne
-    console.log(`GameBoard ${gameBoard}`)
+//     const gameBoard = GameBoard.board;
+//     populateBoard(gameBoard);
+//     const playerOne = Player("One", 'X');
+//     const playerTwo = Player("Two", 'O')
+//     let player = playerOne
 
-    makeMove(player, gameBoard);
+//     for (let i = 0; i < 10; i++) {
+//         if (!checkForWin(gameBoard)) {
+//             makeMove(player, gameBoard);
+//             player.character === playerOne.character ? player = playerTwo : player = playerOne;
+//             console.log("hello")
+//             console.log(`GameBoard ${gameBoard}`)
+//         }
+//     }
 
 
-}
-startGame()
 
+// }
 
-function makeMove(player, board) {
-    BoardContainer.addEventListener(("click"), function (event) {
+//todo -> put startgame inside game object
+//todo -> create mechanic for changing players, and announcing victors on screen
 
-        console.log(player.getCharacter)
-        if (event.target.classList.contains("board-square")) {
-            const squareVal = event.target
-            if (squareVal.textContent === 'O' || squareVal.textContent === 'X') {
-                console.log("Invalid placement")
-            }
-            board[squareVal.getAttribute("data-value")] = player.charater
+// function makeMove(player, board) {
 
-            squareVal.textContent = player.charater
+BoardContainer.addEventListener(("click"), function (event) {
+
+    if (event.target.classList.contains("board-square")) {
+        const squareVal = event.target
+        if (squareVal.textContent === 'O' || squareVal.textContent === 'X') {
+            console.log("Invalid placement")
+            return;
         }
-    })
+        gameBoard[squareVal.getAttribute("data-value")] = player.character
+
+        squareVal.textContent = player.character
+    }
+    if (checkForWin(gameBoard)) {
+        console.log(player.name + " won the game")
+        return;
+    }
+    player.character === playerOne.character ? player = playerTwo : player = playerOne;
+
+})
+
+
+function isValidChar(char) {
+    return (char === 'O' || char === 'X')
 }
+
+
 
 function checkForWin(board) {
     return horizontalWin(board) || verticalWin(board) || diagonalWin(board)
 }
 
 function horizontalWin(board) {
-    return (board[0] === board[1] && board[0] === board[2]) ||
-        (board[3] === board[4] && board[3] === board[5]) ||
-        (board[6] === board[7] && board[6] === board[8])
+    return (isValidChar(board[0]) && (board[0] === board[1] && board[0] === board[2])) ||
+        (isValidChar(board[3]) && (board[3] === board[4] && board[3] === board[5])) ||
+        (isValidChar(board[6]) && (board[6] === board[7] && board[6] === board[8]))
 }
 
 function verticalWin(board) {
-    return (board[0] === board[3] && board[0] === board[6]) ||
-        (board[1] === board[4] && board[1] === board[7]) ||
-        (board[2] === board[5] && board[2] === board[8])
+    return (isValidChar(board[0]) && (board[0] === board[3] && board[0] === board[6])) ||
+        (isValidChar(board[1]) && (board[1] === board[4] && board[1] === board[7])) ||
+        (isValidChar(board[2]) && (board[2] === board[5] && board[2] === board[8]))
 }
 function diagonalWin(board) {
-    return (board[0] === board[4] && board[0] === board[8]) ||
-        (board[2] === board[4] && board[2] === board[6])
+    return (isValidChar(board[0]) && (board[0] === board[4] && board[0] === board[8])) ||
+        (isValidChar(board[2]) && (board[2] === board[4] && board[2] === board[6]))
 }
 
 
 function populateBoard(gameBoard) {
     for (let i = 0; i < 9; i++) {
-        console.log(i);
-        gameBoard[i] = '';
         createBoardSquare('', i);
     }
 }
@@ -103,9 +125,3 @@ function createBoardSquare(x, i) {
     BoardContainer.appendChild(boardSquare);
 }
 
-
-
-
-console.log(checkForWin(['x', 'o', 'o',
-    'o', 'o', 'x',
-    'x', 'x', 'o']))
